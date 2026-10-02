@@ -60,8 +60,10 @@ void nf_queue_entry_release_refs(struct nf_queue_entry *entry)
 	struct nf_hook_state *state = &entry->state;
 
 	/* Release those devices we held, or Alexey will kill me. */
+#if IS_ENABLED(CONFIG_BRIDGE_NETFILTER)
 	if (entry->skb_dev)
 		dev_put(entry->skb_dev);
+#endif
 	if (state->in)
 		dev_put(state->in);
 	if (state->out)
@@ -91,8 +93,15 @@ bool nf_queue_entry_get_refs(struct nf_queue_entry *entry)
 	if (state->sk && !refcount_inc_not_zero(&state->sk->sk_refcnt))
 		return false;
 
+	/* skb->dev is only device-backed for bridge traffic. For locally
+	 * generated packets it aliases skb->rbnode.rb_left (the TCP
+	 * retransmit queue is an rbtree), so dev_hold() here would take a
+	 * reference on a tree node instead of a net_device.
+	 */
+#if IS_ENABLED(CONFIG_BRIDGE_NETFILTER)
 	if (entry->skb_dev)
 		dev_hold(entry->skb_dev);
+#endif
 	if (state->in)
 		dev_hold(state->in);
 	if (state->out)
