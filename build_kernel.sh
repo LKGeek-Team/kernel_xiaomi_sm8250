@@ -61,10 +61,10 @@ fi
 export USE_CCACHE=1
 export CROSS_COMPILE="aarch64-linux-gnu-"
 export CROSS_COMPILE_ARM32="arm-linux-gnueabi-"
-export KBUILD_BUILD_USER="fuzhi"
-export KBUILD_BUILD_HOST="fuzhi"
+export KBUILD_BUILD_USER="LKGeek"
+export KBUILD_BUILD_HOST="LKGeek"
 BUILD_DATE="$(date +%Y%m%d)"
-echo "[*] uname identity: user=${KBUILD_BUILD_USER} host=${KBUILD_BUILD_HOST} localversion=-fuzhi-${BUILD_DATE}"
+echo "[*] uname identity: user=${KBUILD_BUILD_USER} host=${KBUILD_BUILD_HOST} localversion=-LKGeek-${BUILD_DATE}"
 
 echo "[*] Checking Clang version..."
 clang --version || { echo "[!] Clang not found at ${TOOLCHAIN_BIN}. Please check the path."; exit 1; }
@@ -110,7 +110,7 @@ git clone https://github.com/AstideLabs/AnyKernel3 -b kona --single-branch --dep
 echo "[+] AnyKernel3 cloned successfully."
 echo "[*] Adjusting AnyKernel3..."
 sed -i "s/^device\.name1=.*/device.name1=${DEVICE_NAME}/" anykernel/anykernel.sh
-sed -i "s/^kernel\.string=.*/kernel.string=FZKernel by fuzhi/" anykernel/anykernel.sh
+sed -i "s/^kernel\.string=.*/kernel.string=LKGKernel by LKGeek/" anykernel/anykernel.sh
 echo "[*] AnyKernel3 adjusted successfully."
 echo "==========================================="
 
@@ -201,8 +201,8 @@ build_target() {
     echo "[*] Making defconfig: ${DEFCONFIG}..."
     make "${MAKE_OPTS[@]}" "${DEFCONFIG}"
 
-    echo "[*] Setting LOCALVERSION to -fuzhi-${BUILD_DATE}..."
-    scripts/config --file "${OUT_DIR}/.config" --set-str LOCALVERSION "-fuzhi-${BUILD_DATE}"
+    echo "[*] Setting LOCALVERSION to -LKGeek-${BUILD_DATE}..."
+    scripts/config --file "${OUT_DIR}/.config" --set-str LOCALVERSION "-LKGeek-${BUILD_DATE}"
 
     # ----------------------------------------------------
     # Configuration tweaks
@@ -308,7 +308,7 @@ build_target() {
         fi
         local GIT_COMMIT_ID=$(git rev-parse --short=8 HEAD 2>/dev/null || echo "unknown")
         local OS_UPPER=$(echo "$OS_TYPE" | tr '[:lower:]' '[:upper:]')
-        local ZIP_FILENAME="FZKernel_${OS_UPPER}_${DEVICE_NAME}_${KSU_ZIP_STR}_$(date +'%Y%m%d_%H%M%S')_anykernel3_${GIT_COMMIT_ID}.zip"
+        local ZIP_FILENAME="LKGKernel_${OS_UPPER}_${DEVICE_NAME}_${KSU_ZIP_STR}_$(date +'%Y%m%d_%H%M%S')_anykernel3_${GIT_COMMIT_ID}.zip"
 
         echo "[*] Zipping $ZIP_FILENAME ..."
         pushd anykernel > /dev/null
